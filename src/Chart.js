@@ -5,12 +5,11 @@ function Chart({ actions }) {
   const chartRef = useRef();
 
   useEffect(() => {
-    const width = 600, height = 400;
-    const svg = d3.select(chartRef.current)
-      .attr('width', width)
-      .attr('height', height);
-
-    svg.selectAll('*').remove(); // Clear previous render
+    const svg = d3.select(chartRef.current);
+    svg.selectAll('*').remove();
+    const width = 600, height = 300;
+    
+    svg.attr('width', width).attr('height', height);
 
     svg.selectAll('circle')
       .data(actions)

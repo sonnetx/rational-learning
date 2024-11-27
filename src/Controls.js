@@ -1,13 +1,20 @@
 import React from 'react';
 
-function Controls({ signalAccuracy, setSignalAccuracy, addIndividual }) {
+function Controls({ numCats, setNumCats, initializeSimulation, addNextPerson, step, total }) {
   return (
     <div className="controls">
       <label>
-        Signal Accuracy: 
-        <input type="number" step="0.01" value={signalAccuracy} onChange={(e) => setSignalAccuracy(parseFloat(e.target.value))} />
+        Number of Individuals:
+        <input
+          type="number"
+          value={numCats}
+          onChange={(e) => setNumCats(Number(e.target.value))}
+        />
       </label>
-      <button onClick={addIndividual}>Add Individual</button>
+      <button onClick={initializeSimulation}>Reset Simulation</button>
+      <button onClick={addNextPerson} disabled={step >= total}>
+        Add Next Person ({step + 1}/{total})
+      </button>
     </div>
   );
 }
