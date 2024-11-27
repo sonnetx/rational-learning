@@ -20,11 +20,11 @@ function ProbabilityChart({ beliefs, trueState }) {
       .y((d) => yScale(d * trueState));
 
     svg.append('g')
-      .call(d3.axisLeft(yScale))
+      .call(d3.axisLeft(yScale).tickFormat((d) => `${d}`))
       .attr('transform', 'translate(40,0)');
 
     svg.append('g')
-      .call(d3.axisBottom(xScale).ticks(10))
+      .call(d3.axisBottom(xScale).ticks(10).tickFormat(d3.format('.0f')))
       .attr('transform', `translate(0,${height - 20})`);
 
     svg.append('path')
@@ -33,6 +33,25 @@ function ProbabilityChart({ beliefs, trueState }) {
       .attr('stroke', 'steelblue')
       .attr('stroke-width', 2)
       .attr('d', line);
+
+    svg.append('text')
+      .attr('x', width - 100)
+      .attr('y', 30)
+      .text(`Latest Belief: ${beliefs[beliefs.length - 1].toFixed(3)}`)
+      .attr('fill', 'black');
+      
+    svg.append('text')
+      .attr('x', width / 2 - 40)
+      .attr('y', height - 5)
+      .text('Number of Individuals (log)')
+      .attr('fill', 'black');
+
+    svg.append('text')
+      .attr('transform', 'rotate(-90)')
+      .attr('x', -height / 2)
+      .attr('y', 15)
+      .text('Belief (Unitless)')
+      .attr('fill', 'black');
   }, [beliefs, trueState]);
 
   return <svg ref={chartRef}></svg>;

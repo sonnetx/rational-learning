@@ -6,7 +6,20 @@
 .controls {
   margin: 20px;
 }
+ul {
+  list-style-type: disc;
+  padding-left: 2em;
+}
 
+li {
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 0.5em;
+}
+li {
+  font-family: Georgia, serif;
+  margin-bottom: 1em;
+}
 button {
   margin-left: 10px;
   padding: 8px;

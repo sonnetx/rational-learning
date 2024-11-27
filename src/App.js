@@ -37,7 +37,24 @@ function App() {
 
   return (
     <div className="app">
-      <h1>Interactive Bayesian Social Learning</h1>
+      <header className="App-header">
+        <h1>Bayesian Social Learning Simulator</h1>
+        <p>
+          This app models how individuals sequentially make decisions based on their private signals and observed
+          actions. The true state of the world can be +1 or -1. Each person receives a private signal, updating their
+          belief and deciding whether to take action +1 or -1. The simulation visualizes how beliefs evolve over time
+          and how group consensus emerges.
+        </p>
+          <p><strong>Private Signal (z)</strong>: Individual signal influenced by the true state.</p>
+          <p><strong>True State (E)</strong>: The hidden condition, either +1 or -1.</p>
+          <p><strong>Belief (X)</strong>: Updated belief based on previous actions.</p>
+          <p><strong>Action (A)</strong>: The decision an individual takes (either +1 or -1).</p>
+        <p>
+          Click <strong>Add Next Person</strong> to simulate their action and update group beliefs. Observe how belief
+          stabilizes as more individuals contribute.
+        </p>
+      </header>
+
       <Controls
         numCats={numCats}
         setNumCats={setNumCats}
