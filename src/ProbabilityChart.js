@@ -34,12 +34,21 @@ function ProbabilityChart({ beliefs, trueState }) {
       .attr('stroke-width', 2)
       .attr('d', line);
 
+    const latestBelief = beliefs.length > 1 ? beliefs[beliefs.length - 1].toFixed(3) : 'N/A';
+    const priorBelief = beliefs.length > 1 ? beliefs[beliefs.length - 2].toFixed(3) : 'N/A';
+
     svg.append('text')
-      .attr('x', width - 100)
+      .attr('x', width - 140)
       .attr('y', 30)
-      .text(`Latest Belief: ${beliefs[beliefs.length - 1].toFixed(3)}`)
+      .text(`Latest Belief: ${latestBelief}`)
       .attr('fill', 'black');
-      
+
+    svg.append('text')
+      .attr('x', width - 140)
+      .attr('y', 50)
+      .text(`Prior Belief: ${priorBelief}`)
+      .attr('fill', 'black');
+
     svg.append('text')
       .attr('x', width / 2 - 40)
       .attr('y', height - 5)

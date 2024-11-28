@@ -1,39 +1,78 @@
 import React, { useState } from 'react';
-import { simulate, action, updateX, generateSignals } from './simulation';
+import { action, updateX, generateSignals, simulateWithSampling } from './simulation';
 import Chart from './Chart';
 import ProbabilityChart from './ProbabilityChart';
 import Controls from './Controls';
 
 function App() {
-  const [numCats, setNumCats] = useState(500);
-  const [beliefs, setBeliefs] = useState([0]);
-  const [actions, setActions] = useState([]);
-  const [signals, setSignals] = useState([]);
-  const [trueState, setTrueState] = useState(0);
-  const [step, setStep] = useState(0);
+  // Step-by-step simulation states
+  const [stepBeliefs, setStepBeliefs] = useState([0]);
+  const [stepActions, setStepActions] = useState([]);
+  const [stepSignals, setStepSignals] = useState([]);
+  const [stepTrueState, setStepTrueState] = useState(0);
+  const [stepCounter, setStepCounter] = useState(0);
 
-  const initializeSimulation = () => {
-    const E = Math.random() < 0.5 ? 1 : -1; // True state
-    const Zs = generateSignals(numCats, E); // Private signals
-    setSignals(Zs);
-    setTrueState(E);
-    setBeliefs([0]);
-    setActions([]);
-    setStep(0);
+  // Random sampling simulation states
+  const [samplingBeliefs, setSamplingBeliefs] = useState([0]);
+  const [samplingActions, setSamplingActions] = useState([]);
+  const [samplingTrueState, setSamplingTrueState] = useState(0);
+
+  // Shared parameters
+  const [numIndividuals, setNumIndividuals] = useState(50);
+  const [sampleSize, setSampleSize] = useState(10);
+
+  // Initialize step-by-step simulation
+  const initializeStepSimulation = () => {
+    const trueState = Math.random() < 0.5 ? 1 : -1; // True state
+    const signals = generateSignals(numIndividuals, trueState);
+    setStepSignals(signals);
+    setStepTrueState(trueState);
+    setStepBeliefs([0]); // Reset beliefs
+    setStepActions([]); // Reset actions
+    setStepCounter(0); // Reset counter
   };
 
-  const addNextPerson = () => {
-    if (step < signals.length) {
-      const prevX = beliefs[beliefs.length - 1];
-      const curSignal = signals[step];
+  // Add the next person in step-by-step simulation
+  const addNextPersonStep = () => {
+    if (stepCounter < stepSignals.length) {
+      const prevX = stepBeliefs[stepBeliefs.length - 1];
+      const curSignal = stepSignals[stepCounter];
       const curAction = action(prevX, curSignal);
       const curX = updateX(prevX, curAction);
 
-      setBeliefs((prev) => [...prev, curX]);
-      setActions((prev) => [...prev, curAction]);
-      setStep((prev) => prev + 1);
+      setStepBeliefs((prev) => [...prev, curX]);
+      setStepActions((prev) => [...prev, curAction]);
+      setStepCounter((prev) => prev + 1);
     }
   };
+
+  // Run random sampling simulation
+  const runSamplingSimulation = () => {
+    const { beliefs, actions, trueState } = simulateWithSampling(numIndividuals, sampleSize);
+    setSamplingBeliefs(beliefs);
+    setSamplingActions(actions);
+    setSamplingTrueState(trueState);
+  };
+
+  // Complete the entire step-by-step simulation at once
+  const completeStepSimulation = () => {
+    let beliefs = [0];
+    let actions = [];
+    for (let i = 0; i < stepSignals.length; i++) {
+      const prevX = beliefs[beliefs.length - 1];
+      const curSignal = stepSignals[i];
+      const curAction = action(prevX, curSignal);
+      const curX = updateX(prevX, curAction);
+
+      beliefs.push(curX);
+      actions.push(curAction);
+    }
+
+    setStepBeliefs(beliefs);
+    setStepActions(actions);
+    setStepCounter(stepSignals.length);
+  };
+
 
   return (
     <div className="app">
@@ -50,22 +89,46 @@ function App() {
           <p><strong>Belief (X)</strong>: Updated belief based on previous actions.</p>
           <p><strong>Action (A)</strong>: The decision an individual takes (either +1 or -1).</p>
         <p>
+          This simulator demonstrates how individuals update their beliefs and take actions based on private signals and
+          observed decisions. The two modes available:
+          <strong>Step-by-Step Simulation:</strong> Beliefs are updated iteratively using all previous actions.
+          <strong>Random Sampling Simulation:</strong> Beliefs are updated using a randomly selected subset of prior
+            actions.
+        </p>
+        <p>
           Click <strong>Add Next Person</strong> to simulate their action and update group beliefs. Observe how belief
           stabilizes as more individuals contribute.
         </p>
       </header>
 
+      {/* Step-by-Step Simulation */}
+      <h2>Step-by-Step Simulation</h2>
       <Controls
-        numCats={numCats}
-        setNumCats={setNumCats}
-        initializeSimulation={initializeSimulation}
-        addNextPerson={addNextPerson}
-        step={step}
-        total={signals.length}
+        numIndividuals={numIndividuals}
+        setNumIndividuals={setNumIndividuals}
+        initializeSimulation={initializeStepSimulation}
+        addNextPerson={addNextPersonStep}
+        completeSimulation={completeStepSimulation}
+        step={stepCounter}
+        total={stepSignals.length}
       />
       <div className="visualizations">
-        <Chart actions={actions} />
-        <ProbabilityChart beliefs={beliefs} trueState={trueState} />
+        <ProbabilityChart beliefs={stepBeliefs} trueState={stepTrueState} />
+        <Chart actions={stepActions} />
+      </div>
+
+      {/* Random Sampling Simulation */}
+      <h2>Random Sampling Simulation</h2>
+      <Controls
+        numIndividuals={numIndividuals}
+        setNumIndividuals={setNumIndividuals}
+        sampleSize={sampleSize}
+        setSampleSize={setSampleSize}
+        runSimulation={runSamplingSimulation}
+      />
+      <div className="charts">
+        <ProbabilityChart beliefs={samplingBeliefs} trueState={samplingTrueState} />
+        <Chart actions={samplingActions} />
       </div>
     </div>
   );

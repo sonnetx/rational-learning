@@ -12,7 +12,7 @@ function Chart({ actions }) {
 
     svg.attr('width', width).attr('height', height);
 
-    const xScale = d3.scaleLinear().domain([0, actions.length]).range([40, width - 20]);
+    const xScale = d3.scaleBand().domain(actions.map((_, i) => i)).range([40, width - 20]).padding(0.1);
     const yScale = d3.scaleBand().domain([-1, 1]).range([height - 20, 20]).padding(0.1);
 
     svg.append('g')
@@ -29,7 +29,7 @@ function Chart({ actions }) {
       .append('rect')
       .attr('x', (_, i) => xScale(i))
       .attr('y', (d) => yScale(d))
-      .attr('width', 10)
+      .attr('width', xScale.bandwidth())
       .attr('height', yScale.bandwidth())
       .attr('fill', 'orange');
 
@@ -41,14 +41,14 @@ function Chart({ actions }) {
 
     svg.append('text')
       .attr('x', width / 2 - 40)
-      .attr('y', height - 5)
+      .attr('y', height + 5 + 5) // add 5px padding
       .text('Person Index')
       .attr('fill', 'black');
 
     svg.append('text')
       .attr('transform', 'rotate(-90)')
       .attr('x', -height / 2)
-      .attr('y', 15)
+      .attr('y', 15 + 5)
       .text('Actions')
       .attr('fill', 'black');
   }, [actions]);
