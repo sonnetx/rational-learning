@@ -34,14 +34,6 @@ function ProbabilityChart({ beliefs, trueState }) {
       .call(d3.axisBottom(xScale).ticks(10, d3.format('.0f')))
       .attr('transform', `translate(0,${height - margin.bottom})`);
 
-    // Line Path for Beliefs
-    svg.append('path')
-      .datum(beliefs)
-      .attr('fill', 'none')
-      .attr('stroke', 'steelblue')
-      .attr('stroke-width', 2)
-      .attr('d', line);
-
     // Calculate and add Confidence Interval Area
     const cis = beliefs.map((_, i) => {
       const currentSlice = beliefs.slice(0, i + 1).sort(d3.ascending);
@@ -58,6 +50,14 @@ function ProbabilityChart({ beliefs, trueState }) {
       .attr('d', ciArea)
       .style('fill', '#ccc')
       .style('stroke', 'none');
+
+    // Line Path for Beliefs
+    svg.append('path')
+      .datum(beliefs)
+      .attr('fill', 'none')
+      .attr('stroke', 'steelblue')
+      .attr('stroke-width', 2)
+      .attr('d', line);
 
     // Add latest and prior belief text
     const latestBelief = beliefs.length > 1 ? beliefs[beliefs.length - 1].toFixed(3) : 'N/A';
