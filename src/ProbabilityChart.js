@@ -2,6 +2,9 @@ import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
 function ProbabilityChart({ beliefs, trueState }) {
+  if (!Array.isArray(beliefs)) {
+    beliefs = [beliefs];
+  }
   const chartRef = useRef();
 
   useEffect(() => {
@@ -36,9 +39,15 @@ function ProbabilityChart({ beliefs, trueState }) {
 
     // Calculate and add Confidence Interval Area
     const cis = beliefs.map((_, i) => {
-      const currentSlice = beliefs.slice(0, i + 1).sort(d3.ascending);
-      return [d3.quantile(currentSlice, 0.025), d3.quantile(currentSlice, 0.975)];
+      const currentSlice = beliefs.slice(0, i + 1).sort((a, b) => a - b);
+      const lowerIndex = Math.floor(currentSlice.length * 0.025);
+      const upperIndex = Math.floor(currentSlice.length * 0.975);
+      return [
+        currentSlice[lowerIndex] || 0,
+        currentSlice[upperIndex] || 0
+      ];
     });
+
 
     const ciArea = d3.area()
       .x((_, i) => xScale(i + 1))
