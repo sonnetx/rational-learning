@@ -16,7 +16,7 @@ function ProbabilityChart({ beliefs, trueState }) {
 
     svg.attr('width', width).attr('height', height);
 
-    const xScale = d3.scaleLog()
+    const xScale = d3.scaleLinear()
       .domain([1, beliefs.length])
       .range([margin.left, width - margin.right]);
 
@@ -75,20 +75,20 @@ function ProbabilityChart({ beliefs, trueState }) {
     svg.append('text')
       .attr('x', width - margin.right - 120)
       .attr('y', margin.top + 10)
-      .text(`Latest Belief: ${latestBelief}`)
+      .text(`Confidence: ${latestBelief}`)
       .attr('fill', 'black');
 
     svg.append('text')
       .attr('x', width - margin.right - 120)
       .attr('y', margin.top + 30)
-      .text(`Prior Belief: ${priorBelief}`)
+      .text(`Prior: ${priorBelief}`)
       .attr('fill', 'black');
 
     // Add axis labels
     svg.append('text')
       .attr('x', width / 2)
       .attr('y', height - 5)
-      .text('Number of Individuals (log)')
+      .text('Number of Individuals')
       .attr('text-anchor', 'middle')
       .attr('fill', 'black');
 
@@ -96,7 +96,7 @@ function ProbabilityChart({ beliefs, trueState }) {
       .attr('transform', 'rotate(-90)')
       .attr('x', -height / 2)
       .attr('y', 20)
-      .text('Belief (Unitless)')
+      .text('Confidence')
       .attr('text-anchor', 'middle')
       .attr('fill', 'black');
   }, [beliefs, trueState]);

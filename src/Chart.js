@@ -8,19 +8,26 @@ function Chart({ actions }) {
     const svg = d3.select(chartRef.current);
     svg.selectAll('*').remove();
 
-    const width = 600, height = 300;
+    const width = 800, height = 400;
+    const margin = { top: 20, right: 50, bottom: 40, left: 60 };
 
     svg.attr('width', width).attr('height', height);
 
+    // const xScale = d3.scaleBand().domain(actions.map((_, i) => i)).range([100, width - 100]).padding(0.1);
+    // const yScale = d3.scaleBand().domain([-1, 1]).range([height - 50, 50]).padding(0.1);
     const xScale = d3.scaleBand().domain(actions.map((_, i) => i)).range([40, width - 20]).padding(0.1);
     const yScale = d3.scaleBand().domain([-1, 1]).range([height - 20, 20]).padding(0.1);
 
-    svg.append('g')
-      .call(d3.axisLeft(yScale))
-      .attr('transform', 'translate(40,0)');
+    // const xScale = d3.scaleLinear()
+    //   .domain([1, actions.length])
+    //   .range([margin.left, width - margin.right]);
 
     svg.append('g')
-      .call(d3.axisBottom(xScale).ticks(10))
+      .call(d3.axisLeft(yScale))
+      .attr('transform', `translate(40,0)`);
+
+    svg.append('g')
+      .call(d3.axisBottom(xScale).ticks(10, 's'))
       .attr('transform', `translate(0,${height - 20})`);
 
     svg.selectAll('.bar')
@@ -57,3 +64,4 @@ function Chart({ actions }) {
 }
 
 export default Chart;
+
