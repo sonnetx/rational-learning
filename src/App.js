@@ -4,6 +4,7 @@ import Chart from './Chart';
 import ProbabilityChart from './ProbabilityChart';
 import Controls from './Controls';
 import * as d3 from 'd3';
+import BeliefProbabilityChart from './BeliefProbabilityChart';
 
 function App() {
   // Step-by-step simulation states
@@ -157,6 +158,9 @@ function App() {
           <ProbabilityChart beliefs={samplingBeliefs} trueState={samplingTrueState} />
           <Chart actions={samplingActions} />
         </div>
+        {/* <div className="visualizations">
+          <BeliefProbabilityChart simulations={[{ beliefs: stepBeliefs, trueState: stepTrueState }]}  />
+        </div> */}
       </div>
     </div>
     </div>
