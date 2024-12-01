@@ -49,16 +49,16 @@ function ProbabilityChart({ beliefs, trueState }) {
     });
 
 
-    const ciArea = d3.area()
-      .x((_, i) => xScale(i + 1))
-      .y0((d) => yScale(d[0] * trueState))
-      .y1((d) => yScale(d[1] * trueState));
+    // const ciArea = d3.area()
+    //   .x((_, i) => xScale(i + 1))
+    //   .y0((d) => yScale(d[0] * trueState))
+    //   .y1((d) => yScale(d[1] * trueState));
 
-    svg.append('path')
-      .datum(cis)
-      .attr('d', ciArea)
-      .style('fill', '#ccc')
-      .style('stroke', 'none');
+    // svg.append('path')
+    //   .datum(cis)
+    //   .attr('d', ciArea)
+    //   .style('fill', '#ccc')
+    //   .style('stroke', 'none');
 
     // Line Path for Beliefs
     svg.append('path')
